@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import addressbook.sep.yt.dto.AddRequest;
 import addressbook.sep.yt.entity.Addressbook;
 import addressbook.sep.yt.service.AddressbookService;
 
@@ -22,5 +23,11 @@ public class AddressbookController {
         List<Addressbook> addressbooklist = addressbookService.searchAll();
         model.addAttribute("addressbooklist", addressbooklist);
         return "addressbook/list";
+    }
+
+    @RequestMapping(value = "/addressbook/add")
+    public String displayAdd(Model model) {
+        model.addAttribute("addRequest", new AddRequest());
+        return "addressbook/add";
     }
 }
