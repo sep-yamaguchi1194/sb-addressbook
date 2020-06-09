@@ -17,3 +17,7 @@ table th {
 .center {
   text-align: center;
 }
+
+.cell_required {
+	color: #f00;
+}

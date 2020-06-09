@@ -7,5 +7,4 @@ import addressbook.sep.yt.entity.Addressbook;
 
 @Repository
 public interface AddressbookRepository extends JpaRepository<Addressbook, Integer> {
-
 }

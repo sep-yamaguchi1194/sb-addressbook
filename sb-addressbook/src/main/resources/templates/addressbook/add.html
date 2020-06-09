@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>住所録管理システム：住所録登録</title>
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
-  <table>
-    <tr th:if="${validationError}" th:each="error:${validationError}">
-      <td style="color: red;" th:text="${error}"></td>
-    </tr>
-  </table>
-  <h1>住所録管理システム：住所録登録</h1>
-  <form th:action="@{/user/create}" th:object="${addRequest}"
-    th:method="post">
-    <a href="/addressbook/list">キャンセル</a>
-    <table>
-      <tr>
-        <th class="cell_title">名前</th>
-        <th class="cell_required">※</th>
-        <td><input type="text" th:field="*{name}"></td>
-      </tr>
-      <tr>
-        <th class="cell_title">住所</th>
-        <th class="cell_required"></th>
-        <td><input type="text" th:field="*{address}"></td>
-      </tr>
-      <tr>
-        <th class="cell_title">電話番号</th>
-        <th class="cell_required">※</th>
-        <td><input type="text" th:field="*{phone}"></td>
-      </tr>
-    </table>
-    <div class="btn_area_center">
-      <input type="submit" value="登録" class="btn">
-    </div>
-  </form>
+	<table>
+		<tr th:if="${validationError}" th:each="error:${validationError}">
+			<td style="color: red;" th:text="${error}"></td>
+		</tr>
+	</table>
+	<h1>住所録管理システム：住所録登録</h1>
+	<form th:action="@{/address/addcheck}" th:object="${addRequest}"
+		th:method="post">
+		<a href="/addressbook/list">キャンセル</a>
+		<table>
+			<tr>
+				<th class="cell_title">名前</th>
+				<th class="cell_required">*</th>
+				<td><input type="text" th:field="*{name}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">住所</th>
+				<th class="cell_required">*</th>
+				<td><input type="text" th:field="*{address}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">電話番号</th>
+				<th class="cell_required"></th>
+				<td><input type="text" th:field="*{phone}"></td>
+			</tr>
+			<tr>
+				<th class="cell_title">カテゴリ</th>
+				<th class="cell_required"></th>
+				<td>
+					<select th:field="*{category}">
+						<option th:each="category : ${categorylist}" th:value="${category.categoryId}" th:inline="text">[[${category.categoryName}]]</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<div class="btn_area_center">
+			<input type="submit" value="登録" class="btn">
+		</div>
+	</form>
 </body>
 </html>

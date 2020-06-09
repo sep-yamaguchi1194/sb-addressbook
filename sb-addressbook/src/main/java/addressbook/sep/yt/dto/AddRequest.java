@@ -28,4 +28,10 @@ public class AddRequest implements Serializable {
      */
     @Pattern(regexp = "\\d{1,4}-\\d{1,4}-\\d{4}", message = "電話番号の形式で入力してください")
     private String phone;
+
+    /**
+     * カテゴリ
+     */
+    @Pattern(regexp = "\\d")
+    private String category;
 }
