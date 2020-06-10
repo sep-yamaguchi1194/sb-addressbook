@@ -1,10 +1,15 @@
 package addressbook.sep.yt.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -42,6 +47,25 @@ public class AddressbookController {
         List<Category> categoryList = addressbookService.showCategory();
         model.addAttribute("categorylist", categoryList);
         return "addressbook/add";
+    }
+
+    @RequestMapping(value = "/addressbook/add_confirm", method = RequestMethod.POST)
+    public String checkAddRequest(@Validated @ModelAttribute AddRequest addRequest, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            List<String> errorList = new ArrayList<String>();
+
+            for(ObjectError error : result.getAllErrors()) {
+                errorList.add(error.getDefaultMessage());
+            }
+
+            model.addAttribute("validationError", errorList);
+
+            List<Category> categoryList = addressbookService.showCategory();
+            model.addAttribute("categorylist", categoryList);
+            return "addressbook/add";
+        }
+
+        return "addressbook/add_confirm";
     }
 
 
