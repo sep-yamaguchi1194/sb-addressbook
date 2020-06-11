@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import addressbook.sep.yt.dto.AddRequest;
 import addressbook.sep.yt.entity.Addressbook;
 import addressbook.sep.yt.entity.Category;
+import addressbook.sep.yt.form.AddForm;
 import addressbook.sep.yt.service.AddressbookService;
 
 @Controller
@@ -46,6 +47,12 @@ public class AddressbookController {
          */
         List<Category> categoryList = addressbookService.showCategory();
         model.addAttribute("categorylist", categoryList);
+
+        /**
+         * AddForm
+         */
+        AddForm addForm = new AddForm();
+        model.addAttribute("addform", addForm);
         return "addressbook/add";
     }
 

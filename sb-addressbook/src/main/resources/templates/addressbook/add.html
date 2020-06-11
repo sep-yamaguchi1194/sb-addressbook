@@ -13,30 +13,30 @@
     </tr>
   </table>
   <h1>住所録管理システム：住所録登録</h1>
-  <form th:action="@{/addressbook/add_confirm}" th:object="${addRequest}"
+  <form th:action="@{/addressbook/add_confirm}" th:object="${addform}"
     th:method="post">
     <a href="/addressbook/list">キャンセル</a>
     <table>
       <tr>
         <th class="cell_title">名前</th>
         <th class="cell_required">*</th>
-        <td><input type="text" th:field="*{name}"></td>
+        <td><input id="inputName" type="text" th:field="*{name}"></td>
       </tr>
       <tr>
         <th class="cell_title">住所</th>
         <th class="cell_required">*</th>
-        <td><input type="text" th:field="*{address}"></td>
+        <td><input id="inputAddress" type="text" th:field="*{address}"></td>
       </tr>
       <tr>
         <th class="cell_title">電話番号</th>
         <th class="cell_required"></th>
-        <td><input type="text" th:field="*{phone}"></td>
+        <td><input id="inputPhone" type="text" th:field="*{phone}"></td>
       </tr>
       <tr>
         <th class="cell_title">カテゴリ</th>
         <th class="cell_required"></th>
         <td>
-          <select th:field="*{category}">
+          <select id="selectCategory" th:field="*{categoryId}">
             <option th:each="category : ${categorylist}" th:value="${category.categoryId}" th:inline="text">[[${category.categoryName}]]</option>
           </select>
         </td>
