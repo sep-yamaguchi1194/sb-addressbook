@@ -18,6 +18,7 @@ table th {
   text-align: center;
 }
 
-.cell_required {
+.cell_required, .error_message {
 	color: #f00;
 }
+
