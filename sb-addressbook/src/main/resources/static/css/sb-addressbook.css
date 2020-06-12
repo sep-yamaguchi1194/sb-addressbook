@@ -18,7 +18,11 @@ table th {
   text-align: center;
 }
 
-.cell_required, .error_message {
-	color: #f00;
+.cell_required {
+  color: #f00;
 }
 
+.error_message {
+  color: #f00;
+  display: inline-block;
+}

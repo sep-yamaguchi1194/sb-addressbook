@@ -12,15 +12,15 @@ import lombok.Data;
 @Data
 public class AddForm implements Serializable{
 
-    @NotEmpty(message = "名前を入力してください")
-    @ByteSize(size = 40, message = "名前は40桁以内で入力してください")
+    @NotEmpty(message = "名前は必須項目です")
+    @ByteSize(size = 40, message = "名前は全角20文字以内で入力してください")
     private String name;
 
-    @NotEmpty(message = "住所を入力してください")
-    @ByteSize(size = 80, message = "住所は80桁以内で入力してください")
+    @NotEmpty(message = "住所は必須項目です")
+    @ByteSize(size = 80, message = "住所は全角40文字以内で入力してください")
     private String address;
 
-    @IsPhone(message = "電話番号の形式で入力してください「000-0000-0000」")
+    @IsPhone(message = "電話番号は「000-0000-0000」の形式で入力してください")
     private String phone;
 
     @Pattern(regexp = "\\d")

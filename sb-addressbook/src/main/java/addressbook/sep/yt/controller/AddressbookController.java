@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import addressbook.sep.yt.dto.AddRequest;
 import addressbook.sep.yt.entity.Addressbook;
 import addressbook.sep.yt.entity.Category;
 import addressbook.sep.yt.form.AddForm;
@@ -48,7 +51,7 @@ public class AddressbookController {
          * AddForm
          */
         AddForm addForm = new AddForm();
-        model.addAttribute("addform", addForm);
+        model.addAttribute("addForm", addForm);
         return "addressbook/add";
     }
 
@@ -56,12 +59,12 @@ public class AddressbookController {
      * @param addForm
      * @param result
      * @param model
-     * @return 新規登録ページ
+     * @return (バリデーションエラー有)新規登録ページ / (バリデーションエラー無)新規登録確認ページ
      */
     @RequestMapping(value = "/addressbook/add", method = RequestMethod.POST)
-    public String checkAddRequest(@ModelAttribute @Validated AddForm addForm, BindingResult result, Model model) {
+    public String checkAddRequest(@ModelAttribute("addForm") @Validated AddForm addForm, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
-        	model.addAttribute("addform", addForm);
+            model.addAttribute("addForm", addForm);
             /**
              * Categoryエンティティのリスト
              */
@@ -69,9 +72,23 @@ public class AddressbookController {
             model.addAttribute("categorylist", categoryList);
            return "addressbook/add";
         }
+        ModelMap modelMap = new ModelMap();
 
-        return "addressbook/add_confirm";
+        AddRequest addRequest = new AddRequest();
+        addRequest.setName(addForm.getName());
+        addRequest.setAddress(addForm.getAddress());
+        addRequest.setPhone(addForm.getPhone());
+        addRequest.setCategory(addForm.getCategoryId());
+
+        modelMap.addAttribute("addRequest", addRequest);
+        redirectAttributes.addFlashAttribute("model", modelMap);
+
+        return "redirect:/addressbook/add_confirm";
     }
 
+    @RequestMapping(value = "/addressbook/add_confirm")
+    public String displayAddConfirm(Model model) {
+        return "addressbook/add_confirm";
+    }
 
 }

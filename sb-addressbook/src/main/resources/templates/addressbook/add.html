@@ -7,42 +7,44 @@
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
-  <table>
-    <tr th:if="${validationError}" th:each="error:${validationError}">
-      <td style="color: red;" th:text="${error}"></td>
-    </tr>
-  </table>
   <h1>住所録管理システム：住所録登録</h1>
-  <form th:action="@{/addressbook/add}" th:object="${addform}"
+  <form th:action="@{/addressbook/add}" th:object="${addForm}"
     th:method="post">
     <a href="/addressbook/list">キャンセル</a>
     <table>
       <tr>
         <th class="cell_title">名前</th>
         <th class="cell_required">*</th>
-        <td><input id="inputName" type="text" th:field="*{name}"></td>
-      </tr>
-      <tr>
-      	<td colspan="3">エラー表示スペース(仮)<div class="error_message" th:errors="*{name}"></div></td>
+        <td><input id="name" type="text" th:field="*{name}"> <!--/* エラーメッセージ 名前 */-->
+          <div th:if="${#fields.hasErrors('name')}" class="error_message"
+            th:errors="*{name}"></div></td>
       </tr>
       <tr>
         <th class="cell_title">住所</th>
         <th class="cell_required">*</th>
-        <td><input id="inputAddress" type="text" th:field="*{address}"></td>
+        <td><input id="address" type="text" th:field="*{address}">
+          <!--/* エラーメッセージ 住所 */-->
+          <div th:if="${#fields.hasErrors('address')}" class="error_message"
+            th:errors="*{address}"></div></td>
       </tr>
       <tr>
         <th class="cell_title">電話番号</th>
         <th class="cell_required"></th>
-        <td><input id="inputPhone" type="text" th:field="*{phone}"></td>
+        <td><input id="phone" type="text" th:field="*{phone}">
+          <!--/* エラーメッセージ 電話番号 */-->
+          <div th:if="${#fields.hasErrors('phone')}" class="error_message"
+            th:errors="*{phone}"></div></td>
       </tr>
       <tr>
         <th class="cell_title">カテゴリ</th>
         <th class="cell_required"></th>
-        <td>
-          <select id="selectCategory" th:value="*{categoryId}">
-            <option th:each="category : ${categorylist}" th:value="${category.categoryId}" th:inline="text">[[${category.categoryName}]]</option>
-          </select>
-        </td>
+        <td><select id="categoryId" th:field="*{categoryId}">
+            <!--/* addFormのフィールド categoryId が category.categoryIdに一致する場合に selected 付与 */-->
+            <option th:each="category : ${categorylist}"
+              th:value="${category.categoryId}"
+              th:text="${category.categoryName}"
+              th:selected="${category.categoryId}"></option>
+        </select></td>
       </tr>
     </table>
     <div class="btn_area_center">
