@@ -10,7 +10,7 @@ import addressbook.sep.yt.validation.IsPhone;
 import lombok.Data;
 
 @Data
-public class AddForm implements Serializable{
+public class Form implements Serializable{
 
     @NotEmpty(message = "名前は必須項目です")
     @ByteSize(size = 40, message = "名前は全角20文字以内で入力してください")

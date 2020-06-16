@@ -63,6 +63,8 @@ public class Addressbook implements Serializable {
 
     /**
      * Categoryエンティティと結合
+     * Categoryエンティティを参照している(Addressbook.addressbook_category_id = Category.category_id)ので、
+     * AddressbookエンティティからはCategoryエンティティへのinsert, updateを許可しない
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "addressbook_category_id", referencedColumnName = "category_id", insertable = false, updatable = false)

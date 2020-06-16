@@ -7,9 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import addressbook.sep.yt.dto.AddRequest;
 import addressbook.sep.yt.entity.Addressbook;
 import addressbook.sep.yt.entity.Category;
+import addressbook.sep.yt.form.Form;
 import addressbook.sep.yt.repository.AddressbookRepository;
 import addressbook.sep.yt.repository.CategoryRepository;
 
@@ -30,12 +30,31 @@ public class AddressbookService {
         return categoryRepository.findAll();
     }
 
-    public void create(AddRequest addRequest) {
+    public Category showSelectedCategory(String categoryId) {
+        return categoryRepository.findById(categoryId).get();
+    }
+
+    /**
+     * 住所録テーブルへ新規登録を行うメソッド
+     * @param form
+     */
+    public void create(Form addForm) {
+        /**
+         * 住所録エンティティ
+         */
         Addressbook addressbook = new Addressbook();
-        addressbook.setAbName(addRequest.getName());
-        addressbook.setAbAddress(addRequest.getAddress());
-        addressbook.setAbPhone(addRequest.getPhone());
-        addressbook.setAbCategoryId(addRequest.getCategory());
+        addressbook.setAbName(addForm.getName());
+        addressbook.setAbAddress(addForm.getAddress());
+        /**
+         * 電話番号からハイフンを除去
+         */
+        if(addForm.getPhone() != null) {
+            addressbook.setAbPhone(addForm.getPhone().replace("-", ""));
+        } else {
+            addressbook.setAbPhone(addForm.getPhone());
+        }
+        addressbook.setAbCategoryId(addForm.getCategoryId());
+        addressbook.setAbIsDeleted("0");
         addressbookRepository.save(addressbook);
     }
 }

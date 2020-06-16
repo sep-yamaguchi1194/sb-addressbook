@@ -4,8 +4,44 @@
 <head>
 <meta charset="UTF-8">
 <title>住所録管理システム：</title>
+<link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
   <h1>住所録管理システム：住所録登録(確認)</h1>
+  <table th:object="${addForm}">
+    <tr>
+      <th class="cell_title">名前</th>
+      <th class="cell_required">*</th>
+      <td th:text="*{name}"></td>
+    </tr>
+    <tr>
+      <th class="cell_title">住所</th>
+      <th class="cell_required">*</th>
+      <td th:text="*{address}"></td>
+    </tr>
+    <tr>
+      <th class="cell_title">電話番号</th>
+      <th class="cell_required"></th>
+      <td th:text="*{phone}"></td>
+    </tr>
+    <tr>
+      <th class="cell_title">カテゴリ</th>
+      <th class="cell_required"></th>
+      <!--/*
+      <td th:object="${category}" th:text="*{categoryName}"></td>
+      */-->
+    </tr>
+  </table>
+  <form th:action="@{/addressbook/create}" th:object="${addForm}"
+    th:method="post">
+    <input id="name" name="name" type="hidden" th:value="*{name}">
+    <input id="address" name="address" type="hidden" th:value="*{address}">
+    <input id="phone" name="phone" type="hidden" th:value="*{phone}">
+    <input id="categoryId" name="categoryId" type="hidden"
+      th:value="*{categoryId}">
+    <div class="btn_area_center">
+      <input type="submit" value="登録" class="btn">
+    </div>
+  </form>
 </body>
 </html>
