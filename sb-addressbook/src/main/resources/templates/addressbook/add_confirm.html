@@ -3,7 +3,7 @@
   xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>住所録管理システム：</title>
+<title>住所録管理システム：住所録登録(確認)</title>
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
@@ -27,9 +27,9 @@
     <tr>
       <th class="cell_title">カテゴリ</th>
       <th class="cell_required"></th>
-      <!--/*
+
       <td th:object="${category}" th:text="*{categoryName}"></td>
-      */-->
+
     </tr>
   </table>
   <form th:action="@{/addressbook/create}" th:object="${addForm}"

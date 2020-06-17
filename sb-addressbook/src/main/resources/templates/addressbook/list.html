@@ -27,10 +27,10 @@
 				th:object="${addressbook}">
 				<td class="center" th:text="*{abId}"></td>
 				<td th:text="*{abName}"></td>
-				<td th:text="*{abAddress}"></td>
+				<td th:if th:text="*{abAddress}"></td>
 				<td class="center" th:text="*{abPhone}"></td>
 				<td class="center" th:text="*{category.categoryName}"></td>
-				<td class="center">編集</td>
+				<td class="center"><a th:href="@{/addressbook/modify/{id}(id=*{abId})}">編集</a></td>
 				<td class="center">削除</td>
 			</tr>
 		</tbody>

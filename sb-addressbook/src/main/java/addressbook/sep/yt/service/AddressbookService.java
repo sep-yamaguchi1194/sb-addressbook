@@ -30,6 +30,10 @@ public class AddressbookService {
         return categoryRepository.findAll();
     }
 
+    public Addressbook showSelectedAddressbook(int abId) {
+    	return addressbookRepository.findById(abId).get();
+    }
+
     public Category showSelectedCategory(String categoryId) {
         return categoryRepository.findById(categoryId).get();
     }
@@ -57,4 +61,17 @@ public class AddressbookService {
         addressbook.setAbIsDeleted("0");
         addressbookRepository.save(addressbook);
     }
+    /**
+     * 電話番号にハイフンを追加するメソッド
+     * @param phone
+     */
+    public String appendHyphen(String phone) {
+        if(phone.isEmpty()) {
+          return phone;
+        } else {
+          StringBuilder phoneAppendedHyphen = new StringBuilder(phone);
+            phoneAppendedHyphen.insert(3, "-").insert(8,"-");
+          return phoneAppendedHyphen.toString();
+        }
+      }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>住所録管理システム:住所録編集</title>
+<link rel="stylesheet" href="/css/sb-addressbook.css">
+</head>
+<body>
+  <h1>住所録管理システム：住所録編集</h1>
+  <form th:action="@{/addressbook/modify}" th:object="${modifyForm}"
+    th:method="post">
+    <a href="/addressbook/list">キャンセル</a>
+    <table>
+      <tr>
+        <th class="cell_title">名前</th>
+        <th class="cell_required">*</th>
+        <td><input id="name" type="text" th:field="*{name}"> <!--/* エラーメッセージ 名前 */-->
+          <div th:if="${#fields.hasErrors('name')}" class="error_message"
+            th:errors="*{name}"></div></td>
+      </tr>
+      <tr>
+        <th class="cell_title">住所</th>
+        <th class="cell_required">*</th>
+        <td><input id="address" type="text" th:field="*{address}">
+          <!--/* エラーメッセージ 住所 */-->
+          <div th:if="${#fields.hasErrors('address')}" class="error_message"
+            th:errors="*{address}"></div></td>
+      </tr>
+      <tr>
+        <th class="cell_title">電話番号</th>
+        <th class="cell_required"></th>
+        <td><input id="phone" type="text" th:field="*{phone}">
+          <!--/* エラーメッセージ 電話番号 */-->
+          <div th:if="${#fields.hasErrors('phone')}" class="error_message"
+            th:errors="*{phone}"></div></td>
+      </tr>
+      <tr>
+        <th class="cell_title">カテゴリ</th>
+        <th class="cell_required"></th>
+        <td><select id="categoryId" th:field="*{categoryId}">
+            <!--/* addFormのフィールド categoryId が category.categoryIdに一致する場合に selected 付与 */-->
+            <option th:each="category : ${categorylist}"
+              th:value="${category.categoryId}"
+              th:text="${category.categoryName}"
+              th:selected="${category.categoryId}"></option>
+        </select></td>
+      </tr>
+    </table>
+    <div class="btn_area_center">
+      <input type="submit" value="登録" class="btn">
+    </div>
+  </form>
+</body>
+</html>
