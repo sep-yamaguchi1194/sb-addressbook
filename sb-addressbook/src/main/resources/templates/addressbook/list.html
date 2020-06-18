@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>住所録管理システム：住所録一覧</title>
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
-	<h1>住所録管理システム：住所録一覧</h1>
-	<div>
-		<a th:href="@{/addressbook/add}">新規登録</a>
-	</div>
-	<table>
-		<thead>
-			<tr>
-				<th>No.</th>
-				<th>名前</th>
-				<th>住所</th>
-				<th>電話番号</th>
-				<th>カテゴリ</th>
-				<th colspan="2"></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="addressbook : ${addressbooklist}"
-				th:object="${addressbook}">
-				<td class="center" th:text="*{abId}"></td>
-				<td th:text="*{abName}"></td>
-				<td th:if th:text="*{abAddress}"></td>
-				<td class="center" th:text="*{abPhone}"></td>
-				<td class="center" th:text="*{category.categoryName}"></td>
-				<td class="center"><a th:href="@{/addressbook/modify/{id}(id=*{abId})}">編集</a></td>
-				<td class="center">削除</td>
-			</tr>
-		</tbody>
-	</table>
+  <h1>住所録管理システム：住所録一覧</h1>
+  <div>
+    <a th:href="@{/addressbook/add}">新規登録</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>名前</th>
+        <th>住所</th>
+        <th>電話番号</th>
+        <th>カテゴリ</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="addressbook : ${addressbooklist}"
+        th:object="${addressbook}">
+        <td class="center" th:text="*{abId}"></td>
+        <td th:text="*{abName}"></td>
+        <td th:text="*{abAddress}"></td>
+        <td class="center" th:text="*{abPhone}"></td>
+        <td class="center" th:text="*{category.categoryName}"></td>
+        <td class="center">
+          <form action="/addressbook/modify" method="post">
+            <input id="id" name="id" type="hidden" th:value="*{abId}">
+            <input type="submit" value="編集" class="btn">
+          </form>
+        </td>
+        <td class="center">削除</td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>

@@ -8,13 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import addressbook.sep.yt.entity.Addressbook;
 import addressbook.sep.yt.entity.Category;
 import addressbook.sep.yt.form.Form;
+import addressbook.sep.yt.form.ModifyForm;
 import addressbook.sep.yt.service.AddressbookService;
 
 @Controller
@@ -138,31 +139,32 @@ public class AddressbookController {
         return "redirect:/addressbook/list";
     }
 
-    @RequestMapping(value = "/addressbook/modify/{id}")
-    public String displayModify(@PathVariable int id, Model model) {
-    	Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
+    @RequestMapping(value = "/addressbook/modify", method = RequestMethod.POST)
+    public String displayModify(@RequestParam("id")int id, Model model) {
+        Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
 
-    	/**
-    	 * Formクラスを住所録編集用Form(modifyForm)として使用する
-    	 */
-    	Form modifyForm = new Form();
-    	modifyForm.setName(addressbook.getAbName());
-    	modifyForm.setAddress(addressbook.getAbAddress());
-    	//AddressbookエンティティのabPhone(電話番号フィールド)にハイフンを追加する
-    	modifyForm.setPhone(addressbookService.appendHyphen(addressbook.getAbPhone()));
-    	modifyForm.setCategoryId(addressbook.getAbCategoryId());
-    	model.addAttribute("modifyForm", modifyForm);
+        /**
+         * 住所録編集画面用のform(ModifyFormクラス)
+         */
+        ModifyForm modifyForm = new ModifyForm();
+        modifyForm.setId(addressbook.getAbId());
+        modifyForm.setName(addressbook.getAbName());
+        modifyForm.setAddress(addressbook.getAbAddress());
+        //AddressbookエンティティのabPhone(電話番号フィールド)にハイフンを追加する
+        modifyForm.setPhone(addressbookService.appendHyphen(addressbook.getAbPhone()));
+        modifyForm.setCategoryId(addressbook.getAbCategoryId());
+        model.addAttribute("modifyForm", modifyForm);
 
         /**
          * Categoryエンティティのリスト
          */
         List<Category> categoryList = addressbookService.showCategory();
         model.addAttribute("categorylist", categoryList);
-    	return "addressbook/modify";
+        return "addressbook/modify";
     }
 
-    @RequestMapping(value = "/addressbook/modify", method = RequestMethod.POST)
-    public String checkModifyRequest(@ModelAttribute("modifyForm") @Validated Form modifyForm, BindingResult result, Model model) {
+    @RequestMapping(value = "/addressbook/modify_confirm", method = RequestMethod.POST)
+    public String checkModifyRequest(@ModelAttribute("modifyForm") @Validated ModifyForm modifyForm, BindingResult result, Model model) {
         if(result.hasErrors()) {
             model.addAttribute("modifyForm", modifyForm);
             /**
