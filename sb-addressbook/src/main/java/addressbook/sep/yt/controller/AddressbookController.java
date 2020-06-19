@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +31,7 @@ public class AddressbookController {
      */
     @RequestMapping(value = "/addressbook/list", method = RequestMethod.GET)
     public String displayList(Model model) {
-        List<Addressbook> addressbookList = addressbookService.searchAll();
+        List<Addressbook> addressbookList = addressbookService.searchIsNotDeleted();
         model.addAttribute("addressbooklist", addressbookList);
         return "addressbook/list";
     }
@@ -178,5 +179,40 @@ public class AddressbookController {
         model.addAttribute("category", category);
         model.addAttribute("modifyForm", modifyForm);
         return "addressbook/modify_confirm";
+    }
+
+    @RequestMapping(value = "/addressbook/update", method = RequestMethod.POST)
+    public String updateAddressbook(@ModelAttribute("modifyForm") @Validated ModifyForm modifyForm, BindingResult result, Model model) {
+        /**
+         * hiddenフィールドは改竄の可能性があるため、再度バリデーションエラーをチェックする
+         */
+        if(result.hasErrors()) {
+            model.addAttribute("modifyForm", modifyForm);
+            /**
+             * Categoryエンティティのリスト
+             */
+            List<Category> categoryList = addressbookService.showCategory();
+            model.addAttribute("categorylist", categoryList);
+           return "addressbook/modify";
+        }
+        /**
+         * AddressbookServiceクラスのupdateメソッドでデータベースへ更新処理
+         * 終了後、住所録一覧画面へリダイレクト
+         */
+        addressbookService.update(modifyForm);
+        return "redirect:/addressbook/list";
+    }
+
+    @PostMapping("/addressbook/delete_confirm")
+    public String displayDeleteConfirm(@RequestParam("id")int id, Model model) {
+    	Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
+    	model.addAttribute("addressbook", addressbook);
+    	return "addressbook/delete_confirm";
+    }
+
+    @PostMapping("/addressbook/delete")
+    public String deleteAddressbook(@RequestParam("id")int id) {
+    	addressbookService.logicalDelete(id);
+    	return "redirect:/addressbook/list";
     }
 }

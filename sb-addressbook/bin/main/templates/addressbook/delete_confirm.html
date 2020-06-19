@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/sb-addressbook.css">
+<title>住所録管理システム：住所録削除</title>
+</head>
+<body>
+	<h1>住所録管理システム：住所録削除</h1>
+	<table th:object="${addressbook}">
+		<tr>
+			<th class="cell_title">名前</th>
+			<th class="cell_required">*</th>
+			<td th:text="*{abName}"></td>
+		</tr>
+		<tr>
+			<th class="cell_title">住所</th>
+			<th class="cell_required">*</th>
+			<td th:text="*{abAddress}"></td>
+		</tr>
+		<tr>
+			<th class="cell_title">電話番号</th>
+			<th class="cell_required"></th>
+			<td
+				th:text="${not #strings.isEmpty(addressbook.abPhone)}?
+      				${#strings.substring(addressbook.abPhone, 0, 3)} +
+      				'-' + ${#strings.substring(addressbook.abPhone, 3, 7)} +
+      				'-' + ${#strings.substring(addressbook.abPhone, 7, 11)}
+      				: *{abPhone}">
+			</td>
+		</tr>
+		<tr>
+			<th class="cell_title">カテゴリ</th>
+			<th class="cell_required"></th>
+			<td th:text="*{category.categoryName}"></td>
+		</tr>
+	</table>
+	<div class="btn_area_center">
+		<form th:action="@{/addressbook/delete}" th:object="${addressbook}" th:method="post">
+			<input id="id_for_delete" name="id" type="hidden" th:value="*{abId}">
+			<input type="submit" value="削除" class="btn">
+		</form>
+	</div>
+</body>
+</html>

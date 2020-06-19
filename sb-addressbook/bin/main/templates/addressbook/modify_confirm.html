@@ -34,6 +34,7 @@
   </table>
   <form th:action="@{/addressbook/update}" th:object="${modifyForm}"
     th:method="post">
+    <input id="id" name="id" type="hidden" th:value="*{id}">
     <input id="name" name="name" type="hidden" th:value="*{name}">
     <input id="address" name="address" type="hidden" th:value="*{address}">
     <input id="phone" name="phone" type="hidden" th:value="*{phone}">
