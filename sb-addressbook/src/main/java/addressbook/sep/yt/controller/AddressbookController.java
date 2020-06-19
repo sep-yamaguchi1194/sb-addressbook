@@ -89,7 +89,6 @@ public class AddressbookController {
          */
         Category category = addressbookService.showSelectedCategory(addForm.getCategoryId());
         model.addAttribute("category", category);
-        System.out.println(category.getCategoryName());
         model.addAttribute("addForm", addForm);
         return "addressbook/add_confirm";
     }
@@ -177,7 +176,6 @@ public class AddressbookController {
 
         Category category = addressbookService.showSelectedCategory(modifyForm.getCategoryId());
         model.addAttribute("category", category);
-        System.out.println(category.getCategoryName());
         model.addAttribute("modifyForm", modifyForm);
         return "addressbook/modify_confirm";
     }
