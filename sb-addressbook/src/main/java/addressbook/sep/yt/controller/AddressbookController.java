@@ -3,10 +3,14 @@ package addressbook.sep.yt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +33,22 @@ public class AddressbookController {
      * @param model
      * @return 住所録一覧ページ
      */
+    /*
     @RequestMapping(value = "/addressbook/list", method = RequestMethod.GET)
     public String displayList(Model model) {
         List<Addressbook> addressbookList = addressbookService.searchIsNotDeleted();
         model.addAttribute("addressbooklist", addressbookList);
+        return "addressbook/list";
+    }
+    */
+
+    @GetMapping(value = "/addressbook/list")
+    public String displayList(@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
+        Page<Addressbook> addressbookPage = addressbookService.getAddressbooks(pageable);
+
+        model.addAttribute("page", addressbookPage);
+        model.addAttribute("addressbooks", addressbookPage.getContent());
+
         return "addressbook/list";
     }
 
@@ -205,14 +221,14 @@ public class AddressbookController {
 
     @PostMapping("/addressbook/delete_confirm")
     public String displayDeleteConfirm(@RequestParam("id")int id, Model model) {
-    	Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
-    	model.addAttribute("addressbook", addressbook);
-    	return "addressbook/delete_confirm";
+        Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
+        model.addAttribute("addressbook", addressbook);
+        return "addressbook/delete_confirm";
     }
 
     @PostMapping("/addressbook/delete")
     public String deleteAddressbook(@RequestParam("id")int id) {
-    	addressbookService.logicalDelete(id);
-    	return "redirect:/addressbook/list";
+        addressbookService.logicalDelete(id);
+        return "redirect:/addressbook/list";
     }
 }
