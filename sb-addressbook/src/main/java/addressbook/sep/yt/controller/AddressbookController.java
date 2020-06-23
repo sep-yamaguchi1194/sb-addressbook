@@ -22,6 +22,7 @@ import addressbook.sep.yt.entity.Category;
 import addressbook.sep.yt.form.Form;
 import addressbook.sep.yt.form.ModifyForm;
 import addressbook.sep.yt.service.AddressbookService;
+import addressbook.sep.yt.wrapper.PageWrapper;
 
 @Controller
 public class AddressbookController {
@@ -30,24 +31,25 @@ public class AddressbookController {
 
     /**
      * 住所録一覧画面を表示する
+     * @param pageable(デフォルト表示ページ0, 表示レコード数10)
      * @param model
-     * @return 住所録一覧ページ
+     * @param address(住所検索のリクエスト値, 必須ではない)
+     * @return
      */
-    /*
-    @RequestMapping(value = "/addressbook/list", method = RequestMethod.GET)
-    public String displayList(Model model) {
-        List<Addressbook> addressbookList = addressbookService.searchIsNotDeleted();
-        model.addAttribute("addressbooklist", addressbookList);
-        return "addressbook/list";
-    }
-    */
-
     @GetMapping(value = "/addressbook/list")
-    public String displayList(@PageableDefault(page = 0, size = 10)Pageable pageable, Model model) {
-        Page<Addressbook> addressbookPage = addressbookService.getAddressbooks(pageable);
-
-        model.addAttribute("page", addressbookPage);
-        model.addAttribute("addressbooks", addressbookPage.getContent());
+    public String displayList(@PageableDefault(page = 0, size = 10)Pageable pageable, Model model,
+            @RequestParam(name = "address", required = false)String address) {
+        Page<Addressbook> addressbookPage;
+        PageWrapper<Addressbook> page;
+        if(address == null) {
+            addressbookPage = addressbookService.showINotDeletedAddressbooks(pageable);
+            page = new PageWrapper<Addressbook>(addressbookPage,  "/addressbook/list");
+        } else {
+            addressbookPage = addressbookService.searchIsNotDeletedAddressbooks(address, pageable);
+            page = new PageWrapper<Addressbook>(addressbookPage, "/addressbook/list", address);
+        }
+        model.addAttribute("page", page);
+        model.addAttribute("addressbooks", page.getContent());
 
         return "addressbook/list";
     }
@@ -109,22 +111,6 @@ public class AddressbookController {
         model.addAttribute("addForm", addForm);
         return "addressbook/add_confirm";
     }
-
-    /*
-     * 現状、add_confirmへのRequestMappingは不要。この先必要な場合に備えてコメントアウトしておく。
-
-     * 住所録新規登録確認画面を表示する
-     * @param addForm
-     * @param model
-     * @return 住所録新規登録確認画面
-
-    @RequestMapping(value = "/addressbook/add_confirm")
-    public String displayAddConfirm(@ModelAttribute("addForm") Form addForm, Model model) {
-        //model.addAttribute("addForm", addForm);
-
-        return "addressbook/add_confirm";
-    }
-    */
 
     /**
      * 住所録新規登録確認画面からデータベースへ新規登録を行う

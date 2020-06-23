@@ -25,12 +25,12 @@ public class AddressbookService {
     @Autowired
     CategoryRepository categoryRepository;
 
-    public List<Addressbook> searchIsNotDeleted() {
-        return addressbookRepository.findByAbIsDeletedOrderByAbId("0");
+    public Page<Addressbook> showINotDeletedAddressbooks(Pageable pageable) {
+        return addressbookRepository.findByAbIsDeletedOrderByAbId("0", pageable);
     }
 
-    public Page<Addressbook> getAddressbooks(Pageable pageable) {
-        return addressbookRepository.findAll(pageable);
+    public Page<Addressbook> searchIsNotDeletedAddressbooks(String address, Pageable pageable) {
+        return addressbookRepository.findByAbAddressContainingAndAbIsDeletedOrderByAbId(address, "0", pageable);
     }
 
     public List<Category> showCategory() {

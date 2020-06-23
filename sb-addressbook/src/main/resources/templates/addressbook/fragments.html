@@ -1,45 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>flagments</title>
+<meta charset="UTF-8">
+<title>flagments</title>
 </head>
 <body>
 
-  <div th:fragment="pagenation">
-  <ul>
-    <li style="display:inline;">
-      <span th:if="${page.first}">&lt;&lt;前</span>
-      <a
-        th:if="${!page.first}"
-        th:href="@{/addressbook/list(page = ${page.number} - 1)}"
-      >
-        &lt;&lt;前
+  <div th:fragment='paginationbar'>
+    <ul class='pagination-ul'>
+      <li th:class="${page.firstPage}?'disabled':''"
+        style="display: inline"><span th:if='${page.firstPage}'>&laquo;</span>
+        <a th:if='${not page.firstPage}'
+        th:href='@{${page.url}(page=0,size=${page.size},address=${page.address})}'>&laquo;</a></li>
+      <li th:class="${page.hasPreviousPage}? '' : 'disabled'"
+        style="display: inline"><span
+        th:if='${not page.hasPreviousPage}'>&lsaquo;</span> <a
+        th:if='${page.hasPreviousPage}'
+        th:href='@{${page.url}(page=${page.number-2},size=${page.size},address=${page.address})}'>&lsaquo;</a>
+      </li>
+
+
+      <li th:each='item : ${page.items}'
+        th:class="${item.current}? 'active' : ''" style="display: inline">
+        <span th:if='${item.current}' th:text='${item.number}'>1</span> <a
+        th:if='${not item.current}'
+        th:href='@{${page.url}(page=${item.number-1},size=${page.size},address=${page.address})}'>
+          <span th:text='${item.number}'>1</span>
       </a>
-    </li>
-    <li
-      th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-      style="display:inline; margin-left:10px;"
-    >
-      <span th:if="${i} == ${page.number}" th:text="${i + 1}">1</span>
-      <a
-        th:if="${i} != ${page.number}"
-        th:href="@{/addressbook/list(page = ${i})}"
-      >
-        <span th:text="${i+1}">1</span>
-      </a>
-    </li>
-    <li style="display:inline; margin-left:10px;">
-      <span th:if="${page.last}">次&gt;&gt;</span>
-      <a
-        th:if="${!page.last}"
-        th:href="@{/addressbook/list(page = (${page.number} + 1))}"
-      >
-        次&gt;&gt;
-      </a>
-    </li>
-  </ul>
-</div>
+      </li>
+      <li th:class="${page.hasNextPage}? '' : 'disabled'"
+        style="display: inline"><span th:if='${not page.hasNextPage}'>&rsaquo;</span>
+        <a th:if='${page.hasNextPage}'
+        th:href='@{${page.url}(page=${page.number},size=${page.size},address=${page.address})}'>&rsaquo;</a>
+      </li>
+      <li th:class="${page.lastPage}? 'disabled' : ''"
+        style="display: inline"><span th:if='${page.lastPage}'>&raquo;</span>
+        <a th:if='${not page.lastPage}'
+        th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size},address=${page.address})}'>&raquo;</a>
+      </li>
+    </ul>
+  </div>
 
 </body>
 </html>
