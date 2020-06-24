@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 public class PageWrapper<T> {
     //ITEM_RANGE:ページリンクの最大数
     public static final int ITEM_RANGE = 5;
+    public static final int ITEM_GAP = 2;
     private Page<T> page;
     private List<PageItem> items;
     //currentNumber:現在ページのナンバリング
@@ -29,14 +30,14 @@ public class PageWrapper<T> {
             start = 1;
             size = page.getTotalPages();
         } else {
-            if(currentNumber <= ITEM_RANGE - ITEM_RANGE / 2) {
+            if(currentNumber <= ITEM_RANGE - ITEM_GAP) {
                 start = 1;
                 size = ITEM_RANGE;
-            } else if(currentNumber >= page.getTotalPages() - ITEM_RANGE / 2) {
+            } else if(currentNumber >= page.getTotalPages() - ITEM_GAP) {
                 start = page.getTotalPages() - ITEM_RANGE + 1;
                 size = ITEM_RANGE;
             } else {
-                start = currentNumber - ITEM_RANGE / 2;
+                start = currentNumber - ITEM_GAP;
                 size = ITEM_RANGE;
             }
         }
@@ -55,20 +56,20 @@ public class PageWrapper<T> {
 
         currentNumber = page.getNumber() + 1;
 
-        //start:ページナンバリング開始位置、 size:
+        //start:ページナンバリング開始位置、 size:ページナンバリングの終了位置
         int start, size;
         if(page.getTotalPages() <= ITEM_RANGE) {
             start = 1;
             size = page.getTotalPages();
         } else {
-            if(currentNumber <= ITEM_RANGE - ITEM_RANGE / 2) {
+            if(currentNumber <= ITEM_RANGE - ITEM_GAP) {
                 start = 1;
                 size = ITEM_RANGE;
-            } else if(currentNumber >= page.getTotalPages() - ITEM_RANGE / 2) {
+            } else if(currentNumber >= page.getTotalPages() - ITEM_GAP) {
                 start = page.getTotalPages() - ITEM_RANGE + 1;
                 size = ITEM_RANGE;
             } else {
-                start = currentNumber - ITEM_RANGE / 2;
+                start = currentNumber - ITEM_GAP;
                 size = ITEM_RANGE;
             }
         }

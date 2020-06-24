@@ -33,7 +33,7 @@
         th:object="${addressbook}">
         <td class="center" th:text="*{abId}"></td>
         <td th:text="*{abName}"></td>
-        <td th:text="*{abAddress}"></td>
+        <td><div class="address-data" th:text="*{abAddress}"></div><div class="mouse-over-address-data" th:text="*{abAddress}"></div></td>
         <td class="center"
           th:text="${not #strings.isEmpty(addressbook.abPhone)}?
                       ${#strings.substring(addressbook.abPhone, 0, 3)} +

@@ -26,3 +26,25 @@ table th {
   color: #f00;
   display: inline-block;
 }
+
+.address-data {
+   position: relative;
+   width: 100%;
+   max-width: 100%;
+   overflow: hidden;
+   /*3点リーダ*/
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.mouse-over-address-data {
+  display: none;
+  position: absolute;
+  background: #99C;
+  color: #fff;
+  z-index: 2;
+}
+
+.address-data:hover + .mouse-over-address-data {
+  display: block;
+}
