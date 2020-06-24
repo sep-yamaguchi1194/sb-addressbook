@@ -34,13 +34,14 @@ public class AddressbookController {
      * @param pageable(デフォルト表示ページ0, 表示レコード数10)
      * @param model
      * @param address(住所検索のリクエスト値, 必須ではない)
-     * @return
+     * @return 住所録一覧画面
      */
     @GetMapping(value = "/addressbook/list")
     public String displayList(@PageableDefault(page = 0, size = 10)Pageable pageable, Model model,
             @RequestParam(name = "address", required = false)String address) {
         Page<Addressbook> addressbookPage;
         PageWrapper<Addressbook> page;
+
         if(address == null) {
             addressbookPage = addressbookService.showINotDeletedAddressbooks(pageable);
             page = new PageWrapper<Addressbook>(addressbookPage,  "/addressbook/list");
@@ -57,9 +58,9 @@ public class AddressbookController {
     /**
      * 住所録新規登録画面を表示する
      * @param model
-     * @return 新規登録ページ
+     * @return 住所録新規登録画面
      */
-    @RequestMapping(value = "/addressbook/add")
+    @GetMapping(value = "/addressbook/add")
     public String displayAdd(Model model) {
         /**
          * Categoryエンティティのリスト
@@ -76,13 +77,13 @@ public class AddressbookController {
     }
 
     /**
-     * 住所録新規登録画面のFormに入力された値が妥当かチェックを行う
+     * 住所録新規登録画面のformに入力された値が妥当かチェックを行う
      * @param addForm
      * @param result
      * @param model
-     * @return (バリデーションエラー有)新規登録ページ / (バリデーションエラー無)新規登録確認ページ
+     * @return (バリデーションエラー有)住所録新規登録画面 / (バリデーションエラー無)住所録新規登録確認画面
      */
-    @RequestMapping(value = "/addressbook/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/addressbook/add_confirm", method = RequestMethod.POST)
     public String checkAddRequest(@ModelAttribute("addForm") @Validated Form addForm, BindingResult result, Model model) {
         if(result.hasErrors()) {
             model.addAttribute("addForm", addForm);
@@ -93,15 +94,6 @@ public class AddressbookController {
             model.addAttribute("categorylist", categoryList);
            return "addressbook/add";
         }
-        /*
-         * Redirectを使って実装する方法が見つかった場合再考する
-        ModelMap modelMap = new ModelMap();
-
-        modelMap.addAttribute("addForm", addForm);
-        redirectAttributes.addFlashAttribute("model", modelMap);
-
-        return "redirect:/addressbook/add_confirm";
-        */
 
         /**
          * FormフィールドのcategoryIdに対応するCategoryエンティティの取得
@@ -112,27 +104,18 @@ public class AddressbookController {
         return "addressbook/add_confirm";
     }
 
+    @PostMapping(value = "/addressbook/add")
+
+
     /**
      * 住所録新規登録確認画面からデータベースへ新規登録を行う
      * @param addForm
      * @param result
      * @param model
-     * @return (バリデーションエラー有)新規登録ページ / (バリデーションエラー無)住所録一覧画面へリダイレクト
+     * @return 住所録一覧画面へリダイレクト
      */
     @RequestMapping(value = "/addressbook/create", method = RequestMethod.POST)
     public String createAddressbook(@ModelAttribute("addForm") @Validated Form addForm, BindingResult result, Model model) {
-        /**
-         * hiddenフィールドは改竄の可能性があるため、再度バリデーションエラーをチェックする
-         */
-        if(result.hasErrors()) {
-            model.addAttribute("addForm", addForm);
-            /**
-             * Categoryエンティティのリスト
-             */
-            List<Category> categoryList = addressbookService.showCategory();
-            model.addAttribute("categorylist", categoryList);
-           return "addressbook/add";
-        }
         /**
          * AddressbookServiceクラスのcreateメソッドでデータベースへ新規登録
          * 終了後、住所録一覧画面へリダイレクト
@@ -141,6 +124,12 @@ public class AddressbookController {
         return "redirect:/addressbook/list";
     }
 
+    /**
+     * 住所録編集画面を表示する
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/addressbook/modify", method = RequestMethod.POST)
     public String displayModify(@RequestParam("id")int id, Model model) {
         Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
@@ -165,6 +154,13 @@ public class AddressbookController {
         return "addressbook/modify";
     }
 
+    /**
+     * 住所録編集画面のformに入力された値が妥当かチェックを行う
+     * @param modifyForm
+     * @param result
+     * @param model
+     * @return (バリデーションエラー有)住所録編集画面 / (バリデーションエラー無)住所録編集確認画面
+     */
     @RequestMapping(value = "/addressbook/modify_confirm", method = RequestMethod.POST)
     public String checkModifyRequest(@ModelAttribute("modifyForm") @Validated ModifyForm modifyForm, BindingResult result, Model model) {
         if(result.hasErrors()) {
@@ -183,20 +179,15 @@ public class AddressbookController {
         return "addressbook/modify_confirm";
     }
 
+    /**
+     * 住所録編集確認画面からデータベースにupdateを行う
+     * @param modifyForm
+     * @param result
+     * @param model
+     * @return 住所録一覧画面へリダイレクト
+     */
     @RequestMapping(value = "/addressbook/update", method = RequestMethod.POST)
     public String updateAddressbook(@ModelAttribute("modifyForm") @Validated ModifyForm modifyForm, BindingResult result, Model model) {
-        /**
-         * hiddenフィールドは改竄の可能性があるため、再度バリデーションエラーをチェックする
-         */
-        if(result.hasErrors()) {
-            model.addAttribute("modifyForm", modifyForm);
-            /**
-             * Categoryエンティティのリスト
-             */
-            List<Category> categoryList = addressbookService.showCategory();
-            model.addAttribute("categorylist", categoryList);
-           return "addressbook/modify";
-        }
         /**
          * AddressbookServiceクラスのupdateメソッドでデータベースへ更新処理
          * 終了後、住所録一覧画面へリダイレクト
@@ -205,6 +196,12 @@ public class AddressbookController {
         return "redirect:/addressbook/list";
     }
 
+    /**
+     * 住所録削除確認画面の表示
+     * @param id
+     * @param model
+     * @return 住所録削除確認画面の表示
+     */
     @PostMapping("/addressbook/delete_confirm")
     public String displayDeleteConfirm(@RequestParam("id")int id, Model model) {
         Addressbook addressbook = addressbookService.showSelectedAddressbook(id);
@@ -212,6 +209,11 @@ public class AddressbookController {
         return "addressbook/delete_confirm";
     }
 
+    /**
+     * 住所録削除確認画面からデータベースにupdate(レコードの論理削除)を行う
+     * @param id
+     * @return
+     */
     @PostMapping("/addressbook/delete")
     public String deleteAddressbook(@RequestParam("id")int id) {
         addressbookService.logicalDelete(id);

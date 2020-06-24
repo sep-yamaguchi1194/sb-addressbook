@@ -25,22 +25,47 @@ public class AddressbookService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    /**
+     * 未削除住所録レコードを返す
+     * @param pageable
+     * @return
+     */
     public Page<Addressbook> showINotDeletedAddressbooks(Pageable pageable) {
         return addressbookRepository.findByAbIsDeletedOrderByAbId("0", pageable);
     }
 
+    /**
+     * 指定の住所キーワードを含み、かつ未削除の住所録レコードを返す
+     * @param address(検索ワード)
+     * @param pageable
+     * @return
+     */
     public Page<Addressbook> searchIsNotDeletedAddressbooks(String address, Pageable pageable) {
         return addressbookRepository.findByAbAddressContainingAndAbIsDeletedOrderByAbId(address, "0", pageable);
     }
 
+    /**
+     * 全カテゴリレコードを返す
+     * @return
+     */
     public List<Category> showCategory() {
         return categoryRepository.findAll();
     }
 
+    /**
+     * 指定のIDの住所録レコードを返す
+     * @param abId
+     * @return
+     */
     public Addressbook showSelectedAddressbook(int abId) {
         return addressbookRepository.findById(abId).get();
     }
 
+    /**
+     * 指定のIDのカテゴリレコードを返す
+     * @param categoryId
+     * @return
+     */
     public Category showSelectedCategory(String categoryId) {
         return categoryRepository.findById(categoryId).get();
     }

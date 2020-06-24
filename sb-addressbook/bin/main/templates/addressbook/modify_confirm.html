@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
-  <h1>住所録管理システム：住所録登録(確認)</h1>
+  <h1>住所録管理システム：住所録編集(確認)</h1>
   <table th:object="${modifyForm}">
     <tr>
       <th class="cell_title">名前</th>
@@ -40,8 +40,9 @@
     <input id="phone" name="phone" type="hidden" th:value="*{phone}">
     <input id="categoryId" name="categoryId" type="hidden"
       th:value="*{categoryId}">
-    <div class="btn_area_center">
-      <input type="submit" value="登録" class="btn">
+    <div class="btn-area-center">
+      <input type="submit" value="編集" class="btn">
+      <input class="back" type="button" value="戻る" onclick="history.back();">
     </div>
   </form>
 </body>

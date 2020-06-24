@@ -8,6 +8,7 @@
 </head>
 <body>
 	<h1>住所録管理システム：住所録削除</h1>
+	<div class="container">
 	<table th:object="${addressbook}">
 		<tr>
 			<th class="cell_title">名前</th>
@@ -36,11 +37,13 @@
 			<td th:text="*{category.categoryName}"></td>
 		</tr>
 	</table>
-	<div class="btn_area_center">
+	<div class="btn-area-center">
 		<form th:action="@{/addressbook/delete}" th:object="${addressbook}" th:method="post">
 			<input id="id_for_delete" name="id" type="hidden" th:value="*{abId}">
 			<input type="submit" value="削除" class="btn">
+			<input class="back" type="button" value="戻る" onclick="history.back();">
 		</form>
+	</div>
 	</div>
 </body>
 </html>

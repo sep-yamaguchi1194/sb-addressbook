@@ -1,95 +1,133 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>住所録管理システム：住所録一覧</title>
 <link rel="stylesheet" href="/css/sb-addressbook.css">
 </head>
 <body>
-  <h1>住所録管理システム：住所録一覧</h1>
-  <div>
-    <a th:href="@{/addressbook/add}">新規登録</a>
-  </div>
-  <div>
-  <form th:action="@{/addressbook/list}" method="get">
-    <input type="text" id="address" name="address">
-    <input type="submit" value="検索" class="btn">
-  </form>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>名前</th>
-        <th>住所</th>
-        <th>電話番号</th>
-        <th>カテゴリ</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="addressbook : ${addressbooks}"
-        th:object="${addressbook}">
-        <td class="center" th:text="*{abId}"></td>
-        <td th:text="*{abName}"></td>
-        <td><div class="address-data" th:text="*{abAddress}"></div><div class="mouse-over-address-data" th:text="*{abAddress}"></div></td>
-        <td class="center"
-          th:text="${not #strings.isEmpty(addressbook.abPhone)}?
+	<h1>住所録管理システム：住所録一覧</h1>
+	<div>
+		<button class="add" onclick="location.href='/addressbook/add'">新規登録</button>
+	</div>
+	<div class="search-div">
+		<form th:action="@{/addressbook/list}" method="get">
+			<input type="text" id="address" name="address" placeholder="住所"> <input
+				type="submit" value="検索" class="btn">
+		</form>
+	</div>
+	<!--/* ページネーションdiv */-->
+	<div class="pagenation-div" th:fragment='pagenation'>
+		<ul class='pagenation-ul'>
+			<!--/* 最初のページリンク "<<" */-->
+			<li th:class="${page.firstPage}?'disabled':''"><span th:if='${page.firstPage}'>&laquo;</span>
+				<a th:if='${not page.firstPage}'
+				th:href='@{${page.url}(page=0,size=${page.size},address=${page.address})}'>&laquo;</a></li>
+			<!--/* 1つ前のページリンク "<" */-->
+			<li th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+				th:if='${not page.hasPreviousPage}'>&lsaquo;</span> <a
+				th:if='${page.hasPreviousPage}'
+				th:href='@{${page.url}(page=${page.number-2},size=${page.size},address=${page.address})}'>&lsaquo;</a>
+			</li>
+			<!--/* ナンバリングリンク */-->
+			<li th:each='item : ${page.items}'
+				th:class="${item.current}? 'active' : ''">
+				<span th:if='${item.current}' th:text='${item.number}'>1</span> <a
+				th:if='${not item.current}'
+				th:href='@{${page.url}(page=${item.number-1},size=${page.size},address=${page.address})}'>
+					<span th:text='${item.number}'>1</span>
+			</a>
+			</li>
+			<!--/* 1つ先のページリンク ">" */-->
+			<li th:class="${page.hasNextPage}? '' : 'disabled'"><span th:if='${not page.hasNextPage}'>&rsaquo;</span>
+				<a th:if='${page.hasNextPage}'
+				th:href='@{${page.url}(page=${page.number},size=${page.size},address=${page.address})}'>&rsaquo;</a>
+			</li>
+			<!--/* 最後のページリンク ">>" */-->
+			<li th:class="${page.lastPage}? 'disabled' : ''"><span th:if='${page.lastPage}'>&raquo;</span>
+				<a th:if='${not page.lastPage}'
+				th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size},address=${page.address})}'>&raquo;</a>
+			</li>
+		</ul>
+	</div>
+	<table class="table-addressbook-list">
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>名前</th>
+				<th class="th-address">住所</th>
+				<th>電話番号</th>
+				<th>カテゴリ</th>
+				<th colspan="2"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="addressbook : ${addressbooks}"
+				th:object="${addressbook}">
+				<td class="center" th:text="*{abId}"></td>
+				<td th:text="*{abName}"></td>
+				<td><div class="address-data" th:text="*{abAddress}"></div>
+					<div class="mouse-over-address-data" th:text="*{abAddress}"></div></td>
+				<td class="center"
+					th:text="${not #strings.isEmpty(addressbook.abPhone)}?
                       ${#strings.substring(addressbook.abPhone, 0, 3)} +
                       '-' + ${#strings.substring(addressbook.abPhone, 3, 7)} +
                       '-' + ${#strings.substring(addressbook.abPhone, 7, 11)}
                        : *{abPhone}">
-        </td>
-        <td class="center" th:text="*{category.categoryName}"></td>
-        <td class="center">
-          <form action="/addressbook/modify" method="post">
-            <input name="id" type="hidden"
-              th:value="*{abId}"> <input type="submit" value="編集"
-              class="btn">
-          </form>
-        </td>
-        <td class="center">
-          <form action="/addressbook/delete_confirm" method="post">
-            <input name="id" type="hidden"
-              th:value="*{abId}"> <input type="submit" value="削除"
-              class="btn">
-          </form>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div th:fragment='paginationbar'>
-    <ul class='pagination-ul'>
-      <li th:class="${page.firstPage}?'disabled':''"
-        style="display: inline"><span th:if='${page.firstPage}'>&laquo;</span>
-        <a th:if='${not page.firstPage}'
-        th:href='@{${page.url}(page=0,size=${page.size},address=${page.address})}'>&laquo;</a></li>
-      <li th:class="${page.hasPreviousPage}? '' : 'disabled'"
-        style="display: inline"><span
-        th:if='${not page.hasPreviousPage}'>&lsaquo;</span> <a
-        th:if='${page.hasPreviousPage}'
-        th:href='@{${page.url}(page=${page.number-2},size=${page.size},address=${page.address})}'>&lsaquo;</a>
-      </li>
-      <li th:each='item : ${page.items}'
-        th:class="${item.current}? 'active' : ''" style="display: inline">
-        <span th:if='${item.current}' th:text='${item.number}'>1</span> <a
-        th:if='${not item.current}'
-        th:href='@{${page.url}(page=${item.number-1},size=${page.size},address=${page.address})}'>
-          <span th:text='${item.number}'>1</span>
-      </a>
-      </li>
-      <li th:class="${page.hasNextPage}? '' : 'disabled'"
-        style="display: inline"><span th:if='${not page.hasNextPage}'>&rsaquo;</span>
-        <a th:if='${page.hasNextPage}'
-        th:href='@{${page.url}(page=${page.number},size=${page.size},address=${page.address})}'>&rsaquo;</a>
-      </li>
-      <li th:class="${page.lastPage}? 'disabled' : ''"
-        style="display: inline"><span th:if='${page.lastPage}'>&raquo;</span>
-        <a th:if='${not page.lastPage}'
-        th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size},address=${page.address})}'>&raquo;</a>
-      </li>
-    </ul>
-  </div>
+				</td>
+				<td class="center" th:text="*{category.categoryName}"></td>
+				<td class="center">
+					<form action="/addressbook/modify" method="post">
+						<input name="id" type="hidden" th:value="*{abId}"> <input
+							type="submit" value="編集" class="btn">
+					</form>
+				</td>
+				<td class="center">
+					<form action="/addressbook/delete_confirm" method="post">
+						<input name="id" type="hidden" th:value="*{abId}"> <input
+							type="submit" value="削除" class="btn">
+					</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<!--/* ページネーションdiv */-->
+	<div class="pagenation-div" th:fragment='pagenation'>
+		<ul class='pagenation-ul'>
+			<!--/* 最初のページリンク "<<" */-->
+			<li th:class="${page.firstPage}?'disabled':''"><span th:if='${page.firstPage}'>&laquo;</span>
+				<a th:if='${not page.firstPage}'
+				th:href='@{${page.url}(page=0,size=${page.size},address=${page.address})}'>&laquo;</a></li>
+			<!--/* 1つ前のページリンク "<" */-->
+			<li th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+				th:if='${not page.hasPreviousPage}'>&lsaquo;</span> <a
+				th:if='${page.hasPreviousPage}'
+				th:href='@{${page.url}(page=${page.number-2},size=${page.size},address=${page.address})}'>&lsaquo;</a>
+			</li>
+			<!--/* ナンバリングリンク */-->
+			<li th:each='item : ${page.items}'
+				th:class="${item.current}? 'active' : ''">
+				<span th:if='${item.current}' th:text='${item.number}'>1</span> <a
+				th:if='${not item.current}'
+				th:href='@{${page.url}(page=${item.number-1},size=${page.size},address=${page.address})}'>
+					<span th:text='${item.number}'>1</span>
+			</a>
+			</li>
+			<!--/* 1つ先のページリンク ">" */-->
+			<li th:class="${page.hasNextPage}? '' : 'disabled'"><span th:if='${not page.hasNextPage}'>&rsaquo;</span>
+				<a th:if='${page.hasNextPage}'
+				th:href='@{${page.url}(page=${page.number},size=${page.size},address=${page.address})}'>&rsaquo;</a>
+			</li>
+			<!--/* 最後のページリンク ">>" */-->
+			<li th:class="${page.lastPage}? 'disabled' : ''"><span th:if='${page.lastPage}'>&raquo;</span>
+				<a th:if='${not page.lastPage}'
+				th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size},address=${page.address})}'>&raquo;</a>
+			</li>
+		</ul>
+	</div>
+	<div>
+		<button class="add" onclick="location.href='/addressbook/add'">新規登録</button>
+	</div>
 </body>
 </html>

@@ -6,14 +6,17 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 public class PageWrapper<T> {
-    //ITEM_RANGE:ページリンクの最大数
+    //ITEM_RANGE:1度に表示するページリンクの最大数
     public static final int ITEM_RANGE = 5;
+    //ITEM_GAP:現在ページのナンバリングの前後のページリンク表示数
     public static final int ITEM_GAP = 2;
     private Page<T> page;
     private List<PageItem> items;
     //currentNumber:現在ページのナンバリング
     private int currentNumber;
+    //thymeleafテンプレートが取得するためのurl
     private String url;
+    //住所録一覧画面から受け取った住所検索キーワード
     private String address;
 
     //住所検索無しのコンストラクタ

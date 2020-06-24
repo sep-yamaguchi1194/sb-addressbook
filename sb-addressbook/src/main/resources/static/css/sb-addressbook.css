@@ -1,50 +1,127 @@
 @charset "UTF-8";
+
+a {
+	text-decoration: none;
+}
+
 table {
-  width: 80%;
-  border-collapse: collapse;
-  font-size: 12px;
+	width: 80%;
+	border-collapse: collapse;
+	font-size: 12px;
 }
 
 table th, table td {
-  border: 1px solid #ddd;
-  padding: 6px;
+	border: 1px solid #ddd;
+	padding: 6px;
 }
 
 table th {
-  background-color: #f2f2f2;
+	background-color: #f2f2f2;
+}
+
+.table-addressbook-list {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.th-address {
+	width: 20%;
+	max-width: 200px;
+}
+
+.container {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto
 }
 
 .center {
-  text-align: center;
+	text-align: center;
 }
 
 .cell_required {
-  color: #f00;
+	color: #f00;
 }
 
 .error_message {
-  color: #f00;
-  display: inline-block;
+	color: #f00;
+	display: inline-block;
 }
 
 .address-data {
-   position: relative;
-   width: 100%;
-   max-width: 100%;
-   overflow: hidden;
-   /*3点リーダ*/
-   text-overflow: ellipsis;
-   white-space: nowrap;
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
+	/*3点リーダ*/
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .mouse-over-address-data {
-  display: none;
-  position: absolute;
-  background: #99C;
-  color: #fff;
-  z-index: 2;
+	display: none;
+	position: absolute;
+	background: #99C;
+	color: #fff;
+	z-index: 2;
 }
 
-.address-data:hover + .mouse-over-address-data {
-  display: block;
+.address-data:hover+.mouse-over-address-data {
+	display: block;
+}
+
+.btn-area-center {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	width: 30%
+}
+
+.back {
+	margin-left: 20px;
+}
+
+.add {
+	margin-top: 20px;
+	width: 100px;
+}
+
+.text-box-large {
+	width: 55%;
+}
+
+.text-box-medium {
+	width: 45%;
+}
+
+.search-div {
+	width: 300px;
+	margin-left: auto;
+}
+
+.pagenation-div ul {
+	font-size: 0px;
+}
+
+.pagenation-div li {
+	background-color: #f2f2f2;
+	border: 1px solid #ddd;
+	display: inline-block;
+	font-size: 20px;
+	margin-right: 3px;
+	text-align: center;
+	width: 40px;
+}
+
+.pagenation-div a {
+	display: block;
+	font-weight: bold;
+	margin: 0;
+}
+
+.pagenation-div a:hover {
+	background-color: #444;
+	color: #ddd;
 }
